@@ -144,6 +144,7 @@
 .chatbot-input-form input:focus {
   outline: 0.5px solid var(--blue);
 }
+
 .chatbot-input-form button {
   padding: 8px 16px;
   border: none;
@@ -155,12 +156,53 @@
 }
 .chatbot-input-form button:hover {
   background-color: #526d82;
+  /* background-color: black; */
 }
 
 input {
   border-color: #526d82;
+  border-right-color: #fff !important;
 }
 
 p {
   margin: 0;
+}
+
+.error-message {
+  background-color: #ffcccc; /* Light red background for error messages */
+  color: #cc0000; /* Dark red text color for error messages */
+  border-radius: 8px; /* Rounded corners for error messages */
+  padding: 8px; /* Padding for error messages */
+  margin: 8px 0; /* Margin for error messages */
+}
+
+.login-message {
+  color: #ff0000; /* Red text color */
+  font-size: 14px;
+  margin-top: 10px; /* Adjust as needed */
+}
+
+.typing-indicator {
+  font-style: italic;
+  color: #888; /* Adjust color as needed */
+}
+
+.microphone {
+  background-color: #fff !important;
+  border: solid 0.5px #526d82 !important;
+  border-left-color: #fff !important;
+  border-radius: 0% !important;
+}
+
+.microphone i {
+  color: #526d82;
+}
+
+.microphone:disabled {
+  background-color: #e3e9ed !important;
+  border-left: solid 0.5px #e3e9ed !important;
+}
+
+input:disabled {
+  border-right: solid 0.5px #e3e9ed !important;
 }

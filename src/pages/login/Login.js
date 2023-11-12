@@ -5,10 +5,15 @@ import Header from "../../components/header/Header";
 import Footer from "../../components/Footer/Footer";
 import { motion } from "framer-motion";
 import loginImage from "../../assets/Reset.gif";
+import { Alert, Button, Form } from "react-bootstrap";
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const usernameRegex = /^w+$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
   function onChange(value) {
     console.log("Captcha value:", value);
@@ -23,6 +28,41 @@ const Login = () => {
   const handlePasswordChange = (e) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
+  };
+
+  const handleLogin = async () => {
+    setErrorMessage("");
+    // Validate username and password against rege
+    if (!usernameRegex.test(username)) {
+      setErrorMessage("Invalid username format");
+      return;
+    }
+
+    if (!passwordRegex.test(password)) {
+      setErrorMessage("Invalid password format");
+      return;
+    }
+    await fetch("http://127.0.0.1:5000/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Check if the login was successful
+        if (data.message === "Login successful") {
+          // Redirect to another page (replace '/dashboard' with the desired page)
+          window.location.href = "/dashboard";
+        } else {
+          // Handle login failure
+          setErrorMessage("Incorrect username or password");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -42,18 +82,26 @@ const Login = () => {
           <div className="textContainer">
             <h3>Please enter your credentials to login</h3>
             <div className="form">
-              <input type="username" placeholder="Enter your username" />
-              <input
+              <Form.Control
+                type="username"
+                placeholder="Enter your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                style={{ borderColor: errorMessage ? "red" : "" }}
+              />
+              {/* <span style={{ color: "red" }}>{errorMessage}</span> */}
+              <Form.Control
                 type={passwordVisible ? "text" : "password"}
                 placeholder="Enter your password"
                 value={password}
-                onChange={handlePasswordChange}
+                onChange={(e) => setPassword(e.target.value)}
+                style={{ borderColor: errorMessage ? "red" : "" }}
               />
               <span className="eye" onClick={togglePasswordVisibility}>
                 {passwordVisible ? (
-                  <i class="fa-regular fa-eye-slash"></i>
+                  <i className="fa-regular fa-eye-slash"></i>
                 ) : (
-                  <i class="fa-solid fa-eye"></i>
+                  <i className="fa-solid fa-eye"></i>
                 )}
               </span>
               {/* <ReCAPTCHA
@@ -61,11 +109,10 @@ const Login = () => {
                 onChange={onChange}
                 className="captcha"
               /> */}
-
-              <button type="submit">
+              <Button type="submit" onClick={handleLogin} variant="primary">
                 Login
-                <i class="fa-solid fa-arrow-right"></i>
-              </button>
+                <i className="fa-solid fa-arrow-right"></i>
+              </Button>
             </div>
           </div>
         </div>

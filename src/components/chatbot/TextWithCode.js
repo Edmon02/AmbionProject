@@ -4,15 +4,18 @@ import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import "./Chatbot.css";
 
 const CodeBlock = ({ language, code }) => {
-  if(language.toLowerCase().includes("c+") || language.toLowerCase().includes("c#")){
-    language = "c"
+  if (
+    language.toLowerCase().includes("c+") ||
+    language.toLowerCase().includes("c#")
+  ) {
+    language = "c";
   }
   return (
-    <SyntaxHighlighter 
-      language={language} 
+    <SyntaxHighlighter
+      language={language}
       style={atomDark}
       customStyle={{
-        padding: "25px"
+        padding: "25px",
       }}
     >
       {code}
@@ -24,7 +27,7 @@ const TextWithCode = ({ text }) => {
   // Regular expression to match code blocks
   const codeBlockRegex = /```([\s\S]*?)```/g;
   const boldTextRegex = /``(.*?)``/g;
-
+  console.log(text);
   const matches = text.match(codeBlockRegex);
 
   if (!matches) {
@@ -33,7 +36,10 @@ const TextWithCode = ({ text }) => {
   }
 
   // Replace text inside double backticks with bold text
-  const formattedText = text.replace(boldTextRegex, (_, p1) => `<strong>${p1}</strong>`);
+  const formattedText = text.replace(
+    boldTextRegex,
+    (_, p1) => `<strong>${p1}</strong>`,
+  );
 
   // Split the text into code and non-code parts
   const parts = formattedText.split(codeBlockRegex);
@@ -46,7 +52,7 @@ const TextWithCode = ({ text }) => {
           return <p key={index} dangerouslySetInnerHTML={{ __html: part }} />;
         } else {
           // Code part
-          const [language, code] = part.split('\n', 2);
+          const [language, code] = part.split("\n", 2);
           return <CodeBlock key={index} language={language} code={part} />;
         }
       })}
